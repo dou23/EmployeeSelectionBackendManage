@@ -5,23 +5,35 @@ import 'package:emplyoee_selection/app/net/es_api.dart';
 import 'package:get/get.dart';
 
 class SelectionContentProvider extends GetConnect {
-  Future<BaseResponse<List<SelectionContentEntity>>> getSelectionContentList() async {
+  Future<BaseResponse<List<SelectionContentEntity>>>
+      getSelectionContentList() async {
     var response = await http.post(ESApi.selectionContentList);
     print("请求结果:${response.data}");
     return BaseResponse<List<SelectionContentEntity>>.fromJson(response.data);
   }
 
-  Future<BaseResponse> selectionContentCreate(String name,List<SelectionContentContentDetail> details) async {
-    var response = await http.post(ESApi.selectionContentCreate,data: {
-      "name":name,
-      "details":details,
+  Future<BaseResponse> selectionContentCreate(
+      String name, List<SelectionContentContentDetail> details) async {
+    var response = await http.post(ESApi.selectionContentCreate, data: {
+      "name": name,
+      "details": details,
     });
     return BaseResponse.fromJson(response.data);
   }
 
   Future<BaseResponse> selectionContentDel(int id) async {
-    var response = await http.post(ESApi.selectionContentDel,data: {
-      "id":id,
+    var response = await http.post(ESApi.selectionContentDel, data: {
+      "id": id,
+    });
+    return BaseResponse.fromJson(response.data);
+  }
+
+  Future<BaseResponse> selectionContentEdit(
+      int id, String name, List<SelectionContentContentDetail> details) async {
+    var response = await http.post(ESApi.selectionContentEdit, data: {
+      "id": id,
+      "name": name,
+      "details": details,
     });
     return BaseResponse.fromJson(response.data);
   }

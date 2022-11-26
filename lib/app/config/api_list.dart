@@ -19,4 +19,6 @@ class ESApi {
   static const String selectionContentCreate = "user/selection/content/create";
   ///删除指定评选内容模板
   static const String selectionContentDel = "user/selection/content/del";
+  ///编辑指定评选内容模板
+  static const String selectionContentEdit = "user/selection/content/edit";
 }

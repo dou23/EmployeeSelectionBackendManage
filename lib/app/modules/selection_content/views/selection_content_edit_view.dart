@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
+import 'package:oktoast/oktoast.dart';
 
 import '../model/selection_content_entity.dart';
 
@@ -17,7 +18,7 @@ class SelectionContentEditView extends GetView<SelectionContentController> {
   RxInt contentNum = 0.obs;
 
   SelectionContentEditView(this.entity) {
-    contentNum.value = entity?.contentDetail?.length ?? 0;
+    contentNum.update((val) => entity?.contentDetail?.length ?? 0);
     textEditingController.text = entity?.name ?? "";
     print("当前内容:${entity}");
   }
@@ -92,7 +93,40 @@ class SelectionContentEditView extends GetView<SelectionContentController> {
                       },
                       child: Text("取消")),
                   Padding(padding: EdgeInsets.fromLTRB(48, 0, 48, 0)),
-                  OutlinedButton(onPressed: () async {}, child: Text("添加")),
+                  OutlinedButton(
+                      onPressed: () async {
+                        if (entity?.name == "") {
+                          showToast("请输入活动模板名称");
+                          return;
+                        }
+                        entity?.contentDetail?.forEach((element) {
+                          if (element == null) {
+                            showToast("请设置");
+                            return;
+                          }
+                          if (element.name == "") {
+                            showToast("评选内容不能为空");
+                            return;
+                          }
+                          if (element.highestScore == 0) {
+                            showToast("请设置评选项最高得分");
+                            return;
+                          }
+                          if (element.lowestScore == 0) {
+                            showToast("请设置评选项最低得分");
+                            return;
+                          }
+                        });
+                        var response = await controller.selectionContentEdit(
+                            entity?.iD?.toInt() ?? 0,
+                            entity?.name ?? "",
+                            entity?.contentDetail ?? []);
+                        showToast(response.msg ?? "");
+                        if (response.success) {
+                          Get.back();
+                        }
+                      },
+                      child: Text("添加")),
                 ],
               ),
               Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 20)),
@@ -307,7 +341,9 @@ class SelectionContentEditItem extends GetView {
           ),
           child: OutlinedButton(
             onPressed: () async {
-              selectionContentCreateList?.removeAt(index);
+              if ((selectionContentCreateList?.length ?? 0) > index) {
+                selectionContentCreateList?.removeAt(index);
+              }
               contentNum.value--;
             },
             child: Text(

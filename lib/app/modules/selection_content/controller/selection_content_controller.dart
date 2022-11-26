@@ -21,11 +21,17 @@ class SelectionContentController extends GetxController {
     refresh();
   }
 
-  Future<BaseResponse> selectionContentCreate(String name,List<SelectionContentContentDetail> details) async {
+  Future<BaseResponse> selectionContentCreate(
+      String name, List<SelectionContentContentDetail> details) async {
     return await provider.selectionContentCreate(name, details);
   }
 
   Future<BaseResponse> selectionContentDel(int id) async {
     return await provider.selectionContentDel(id);
+  }
+
+  Future<BaseResponse> selectionContentEdit(
+      int id, String name, List<SelectionContentContentDetail> details) async {
+    return await provider.selectionContentEdit(id, name, details);
   }
 }
